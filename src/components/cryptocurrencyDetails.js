@@ -1,27 +1,24 @@
 import React, { Component } from "react";
 import http from "../services/httpService";
+import {getCurrencyDetails} from "../services/cryptocurrenciesService";
 
-class cryptocurrencyDetails extends Component {
+class CryptocurrencyDetails extends Component {
 
-    state = {
-        currency: []
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            currency: []
+        };
+    }
 
     async componentDidMount() {
-
-        var crypto_id = this.props.match.params.id;
-        var config = {
-            headers: {
-                "X-CMC_PRO_API_KEY": "0b90ded0-dca8-4265-8153-36c95423bc16",
-                "Accept": "application/json"
-            }
-        };
-
-        await http.get('https://cors-anywhere.herokuapp.com/' + 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/info?id=' + crypto_id, config)
-            .then(response => {
-                this.setState({currency : response.data.data[crypto_id]});
-            })
+        let currencyId = this.props.match.params.id;
+        const { data } = await getCurrencyDetails(currencyId);
+        const currency = data.data[currencyId];
+        this.setState({ currency });
     }
+
 
     render() {
         return (
@@ -45,4 +42,4 @@ class cryptocurrencyDetails extends Component {
     }
 }
 
-export default cryptocurrencyDetails;
+export default CryptocurrencyDetails;

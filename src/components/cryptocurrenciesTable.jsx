@@ -1,68 +1,79 @@
 import React, {Component} from 'react';
 import Table from "./common/table";
 import { Link } from "react-router-dom";
+import config from "../config.json";
 
 class CryptocurrenciesTable extends Component {
 
-    columns = [
-        {
-            path: "name",
-            label: "Name",
-            content: currency => <Link to={`/cryptocurrencies/${currency.id}`}>{currency.name}</Link>
-        },
-        {
-            path: "symbol",
-            label: "Short Name",
-        },
-        {
-            path: "quote.USD.price",
-            label: "$ Value",
-        },
-        {
-            path: "quote.USD.percent_change_24h",
-            label: "last 24h",
-            content: currency => <span className={currency.quote.USD.percent_change_24h < 0 ? "text-danger" : "text-success"}>{currency.quote.USD.percent_change_24h} %</span>
-        },
-        {
-            path: "amount",
-            label: "Amount you own",
-            content: currency => <div>
-                                    <input type="number" name="inputCurrency" className="form-control" onChange={(e) => this.handleInput(currency, e)} defaultValue={this.formatAmount(currency)}/>
-                                    <button type="button" className="btn btn-secondary" onClick={() => {this.props.onUpdate(currency)}}>Submit</button>
-                                </div>
-        },
-        {
-            path: "your_coin",
-            label: "$ your coin",
-            content: currency => <span> $ {this.formatYourCoin(currency)} </span>
-        },
-    ];
-
-    handleInput = (currency, e) => {
-        console.log('sdcds');
-        currency.amount = e.target.value;
-    };
+    constructor(props) {
+        super(props);
+        this.columns = [
+            {
+                path: "name",
+                label: "Name",
+                content: currency => <Link to={`/cryptocurrencies/${currency.id}`}>{currency.name}</Link>
+            },
+            {
+                path: "symbol",
+                label: "Short Name",
+            },
+            {
+                path: "quote." + config.convertCurrency + ".price",
+                label: "$ Value",
+            },
+            {
+                path: "quote." + config.convertCurrency + ".percent_change_24h",
+                label: "last 24h",
+                content: currency => <span
+                    className={currency.quote[config.convertCurrency].percent_change_24h < 0 ? "text-danger" : "text-success"}>{currency.quote[config.convertCurrency].percent_change_24h} %</span>
+            },
+            {
+                path: "amount",
+                label: "Amount you own",
+                content: currency => <div>
+                    <input
+                        type="number"
+                        name="inputCurrency"
+                        className="form-control"
+                        onChange={(e) => this.props.onInputAmount(currency, e)}
+                        defaultValue={this.formatAmount(currency)}
+                        onKeyPress={(e) => this.props.onKeyPress(currency, e)}
+                    />
+                    <button type="button" disabled={!currency.amount} className="btn btn-secondary" onClick={() => {
+                        this.props.onUpdateAmount(currency)
+                    }}>Submit
+                    </button>
+                </div>
+            },
+            {
+                path: "your_coin",
+                label: "$ your coin",
+                content: currency => <span> $ {this.formatYourCoin(currency)} </span>
+            },
+        ];
+    }
 
     formatAmount = (currency) => {
-        if(localStorage.getItem('currency_amount_' + currency.id)) {
-            return localStorage.getItem('currency_amount_' + currency.id);
+        if(localStorage.getItem(config.amountLocalStorageKeyPrefix + currency.id)) {
+            return localStorage.getItem(config.amountLocalStorageKeyPrefix + currency.id);
         }
 
         return null;
     };
 
     formatYourCoin = (currency) => {
-        if(currency.your_coin === undefined && !this.formatAmount(currency)) {
-            return 0;
-        } else if(currency.your_coin) {
-            return  currency.your_coin;
+        if(currency.your_coin) {
+            return currency.your_coin;
+        } else if(localStorage.getItem(config.coinValueLocalStorageKeyPrefix)) {
+            return localStorage.getItem(config.coinValueLocalStorageKeyPrefix);
+        } else if(this.formatAmount(currency)) {
+            return this.formatAmount(currency) * currency.quote[config.convertCurrency].price;
         }
-
-        return this.formatAmount(currency) * currency.quote.USD.price;
+        return  0;
     };
 
     render() {
-        const { currencies, onUpdate } = this.props;
+        const { currencies, onUpdateAmount, onInputAmount, onKeyPress } = this.props;
 
         return (
             <Table

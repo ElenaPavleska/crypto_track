@@ -1,22 +1,25 @@
 import http from "./httpService";
-// import { apiURL } from "../config.jason";
+import config from "../config.json";
 
-export function getCurrencies () {
-    let config = {
+export function getCurrencies (page = 1, limit = 50) {
+    let envOptions = {
         headers: {
-            "X-CMC_PRO_API_KEY": "0b90ded0-dca8-4265-8153-36c95423bc16",
+            "X-CMC_PRO_API_KEY": config.apiKey,
             "Accept": "application/json"
         }
     };
-    return http.get("https://cors-anywhere.herokuapp.com/" + "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=50&convert=USD", config);
+
+    const params = "sort=price&start=" + page + "&limit=" + limit + "&convert=" + config.convertCurrency;
+
+    return http.get(config.proxyUrl +  config.apiUrl + "/v1/cryptocurrency/listings/latest?" + params, envOptions);
 }
 
-export function getCurrency (id) {
-    let config = {
+export function getCurrencyDetails (id) {
+    let envOptions = {
         headers: {
-            "X-CMC_PRO_API_KEY": "0b90ded0-dca8-4265-8153-36c95423bc16",
+            "X-CMC_PRO_API_KEY": config.apiKey,
             "Accept": "application/json"
         }
     };
-    return http.get("https://cors-anywhere.herokuapp.com/" + "https://pro-api.coinmarketcap.com/v1/cryptocurrency/info" + "?id=" + id, config);
+    return http.get(config.proxyUrl + config.apiUrl  + "/v1/cryptocurrency/info" + "?id=" + id, envOptions);
 }

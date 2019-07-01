@@ -1,22 +1,42 @@
 import React, { Component } from "react";
-// import http from "../services/httpService";
 import CryptocurrenciesTable from "./cryptocurrenciesTable"
 import { getCurrencies } from "../services/cryptocurrenciesService";
 import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
+import config from "../config.json";
 
 class Cryptocurrencies extends Component {
-    state = {
-        currencies: [],
-        pageSize: 10,
-        currentPage: 1,
-        value: 0,
-        inputCurrency: ''
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            currencies: [],
+            pageSize: 10,
+            currentPage: 1
+        };
     };
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.loadData();
+        this.interval = setInterval(async () => this.loadData(), 60000);
+    };
+
+    async loadData() {
         const { data } = await getCurrencies();
         const currencies = [ ...data.data];
+        this.setState({ currencies });
+    };
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    };
+
+    handleInputAmount = (currency, e) => {
+        e.preventDefault();
+
+        const currencies = [...this.state.currencies];
+        const index = currencies.indexOf(currency);
+        currencies[index].amount = e.target.value;
         this.setState({ currencies });
     };
 
@@ -24,17 +44,34 @@ class Cryptocurrencies extends Component {
         this.setState({currentPage : page });
     };
 
-    handleUpdate = async currency => {
+    handleSubmitAmount = async currency => {
         const currencies = [...this.state.currencies];
         const index = currencies.indexOf(currency);
-        currencies[index].your_coin = currencies[index].amount * currencies[index].quote.USD.price;
+
+        const coin = currencies[index].amount * currencies[index].quote[config.convertCurrency].price;
+
+        currencies[index].your_coin = coin;
         this.setState({ currencies });
 
         this.saveAmountInLocalStorage(currency.id, currency.amount);
+        this.saveYourCoinInLocalStorage(currency.id, coin);
     };
 
-    saveAmountInLocalStorage(currency_id, amount) {
-        localStorage.setItem('currency_amount_' + currency_id, amount);
+    handleKeyPress = (currency, e) => {
+       if(e.key === 'Enter') {
+            const currencies = [...this.state.currencies];
+            const index = currencies.indexOf(currency);
+            currencies[index].amount = e.target.value;
+            this.setState({currencies});
+        }
+    };
+
+    saveAmountInLocalStorage = (currency_id, amount) => {
+        localStorage.setItem(config.amountLocalStorageKeyPrefix + currency_id, amount);
+    };
+
+    saveYourCoinInLocalStorage = (currency_id, value) => {
+        localStorage.setItem(config.coinValueLocalStorageKeyPrefix + currency_id, value);
     };
 
     render() {
@@ -48,7 +85,9 @@ class Cryptocurrencies extends Component {
                 <h2 className="text-success">Cryptocurrencies</h2>
                 <CryptocurrenciesTable
                     currencies={ currencies }
-                    onUpdate={this.handleUpdate}
+                    onUpdateAmount={this.handleSubmitAmount}
+                    onInputAmount={this.handleInputAmount}
+                    onKeyPress={this.handleKeyPress}
                 />
                 <Pagination
                     itemCount={count}
