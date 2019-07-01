@@ -17,6 +17,6 @@ export function getData() {
     return data;
 }
 
-export function getCryptocurrencies(id) {
+export function getCryptocurrency(id) {
     return data.find(c => c.id === id);
 }

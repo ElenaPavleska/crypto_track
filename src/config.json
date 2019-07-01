@@ -1,0 +1,5 @@
+{
+  "API_KEY": "0b90ded0-dca8-4265-8153-36c95423bc16",
+  "apiEndpoint": "https://pro-api.coinmarketcap.com/v1/",
+  "PROXY_URL": "https://cors-anywhere.herokuapp.com/"
+}
