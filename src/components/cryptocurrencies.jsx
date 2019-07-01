@@ -4,6 +4,7 @@ import { getCurrencies } from "../services/cryptocurrenciesService";
 import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
 import config from "../config.json";
+import Page from 'react-page-loading';
 
 class Cryptocurrencies extends Component {
     constructor(props) {
@@ -82,19 +83,21 @@ class Cryptocurrencies extends Component {
 
         return (
             <React.Fragment>
-                <h1>Cryptocurrencies</h1>
-                <CryptocurrenciesTable
-                    currencies={ currencies }
-                    onUpdateAmount={this.handleSubmitAmount}
-                    onInputAmount={this.handleInputAmount}
-                    onKeyPress={this.handleKeyPress}
-                />
-                <Pagination
-                    itemCount={count}
-                    pageSize={pageSize}
-                    currentPage={currentPage}
-                    onPageChange={this.handlePageChange}
-                />
+                <Page loader={"bar"} color={"#A9A9A9"} size={4}>
+                    <h1>Cryptocurrencies</h1>
+                    <CryptocurrenciesTable
+                        currencies={ currencies }
+                        onUpdateAmount={this.handleSubmitAmount}
+                        onInputAmount={this.handleInputAmount}
+                        onKeyPress={this.handleKeyPress}
+                    />
+                    <Pagination
+                        itemCount={count}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onPageChange={this.handlePageChange}
+                    />
+                </Page>
             </React.Fragment>
         );
     }
