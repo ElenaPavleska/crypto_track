@@ -18,6 +18,10 @@
 .env.development.local
 .env.test.local
 .env.production.local
+/src/.sass-cache
+/src/style/.sass-cache
+/src/style/abstracts/.sass-cache
+/src/style/components/.sass-cache
 
 npm-debug.log*
 yarn-debug.log*

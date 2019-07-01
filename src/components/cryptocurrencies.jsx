@@ -82,7 +82,7 @@ class Cryptocurrencies extends Component {
 
         return (
             <React.Fragment>
-                <h2 className="text-success">Cryptocurrencies</h2>
+                <h1>Cryptocurrencies</h1>
                 <CryptocurrenciesTable
                     currencies={ currencies }
                     onUpdateAmount={this.handleSubmitAmount}

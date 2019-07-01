@@ -1,0 +1,33 @@
+// @include flex(flex, row, wrap, flex-start, flex-start);
+@mixin flex($display, $flex-direction, $flex-wrap, $justify-content, $align-items, $align-content: null) {
+  @if $display == 'inline-flex' {
+    display: inline-flex;
+  } @else {
+    display: flex;
+  }
+  flex-flow: $flex-direction $flex-wrap;
+  justify-content: $justify-content;
+  align-items: $align-items;
+  align-content: $align-content;
+}
+
+// @include breakpoint(sm) {}
+@mixin breakpoint($value) {
+
+  @if $value == xs {
+    @media (max-width: $xs) { @content; }
+  }
+
+  @if $value == sm {
+    @media (max-width: $sm) { @content; }
+  }
+
+  @if $value == md {
+    @media (max-width: $md) { @content; }
+  }
+
+  @if $value == lg {
+    @media (max-width: $lg) { @content; }
+  }
+
+}

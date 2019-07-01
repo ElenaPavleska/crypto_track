@@ -30,7 +30,7 @@ class CryptocurrenciesTable extends Component {
             {
                 path: "amount",
                 label: "Amount you own",
-                content: currency => <div>
+                content: currency => <div className="cryptotable-amount">
                     <input
                         type="number"
                         name="inputCurrency"
@@ -39,9 +39,13 @@ class CryptocurrenciesTable extends Component {
                         defaultValue={this.formatAmount(currency)}
                         onKeyPress={(e) => this.props.onKeyPress(currency, e)}
                     />
-                    <button type="button" disabled={!currency.amount} className="btn btn-secondary" onClick={() => {
-                        this.props.onUpdateAmount(currency)
-                    }}>Submit
+                    <button
+                        type="button"
+                        disabled={!currency.amount}
+                        className="btn btn-secondary cryptotable-amount-button"
+                        onClick={() => { this.props.onUpdateAmount(currency) }}
+                    >
+                        Submit
                     </button>
                 </div>
             },

@@ -1,0 +1,19 @@
+.cryptotable {
+
+  &-amount {
+    @include flex(flex, row, nowrap, flex-start, center);
+
+    @include breakpoint(md) {
+      @include flex(flex, column, nowrap, center, stretch);
+    }
+
+    &-button {
+      margin-left: 10px;
+
+      @include breakpoint(md) {
+        margin-left: 0;
+        margin-top: 5px;
+      }
+    }
+  }
+}

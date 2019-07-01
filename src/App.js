@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import  NavBar  from "./components/navBar";
 import  Cryptocurrencies  from "./components/cryptocurrencies";
 import  CryptocurrencyDetails  from "./components/cryptocurrencyDetails";
 import "react-toastify/dist/ReactToastify.css";
-import "./App.scss";
 
 class App extends Component {
 
@@ -12,7 +12,7 @@ class App extends Component {
         return (
             <React.Fragment>
                 <ToastContainer />
-                {/*<NavBar />*/}
+                <NavBar />
                 <main className="container">
                     <Switch>
                         <Route path="/cryptocurrencies/:id" component={CryptocurrencyDetails} />
