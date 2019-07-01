@@ -29,6 +29,12 @@ class Cryptocurrencies extends Component {
         const index = currencies.indexOf(currency);
         currencies[index].your_coin = currencies[index].amount * currencies[index].quote.USD.price;
         this.setState({ currencies });
+
+        this.saveAmountInLocalStorage(currency.id, currency.amount);
+    };
+
+    saveAmountInLocalStorage(currency_id, amount) {
+        localStorage.setItem('currency_amount_' + currency_id, amount);
     };
 
     render() {

@@ -27,23 +27,39 @@ class CryptocurrenciesTable extends Component {
             path: "amount",
             label: "Amount you own",
             content: currency => <div>
-                                    <input type="number" name="inputCurrency" className="form-control" onChange={(e) => this.handleInput(currency, e)}/>
+                                    <input type="number" name="inputCurrency" className="form-control" onChange={(e) => this.handleInput(currency, e)} defaultValue={this.formatAmount(currency)}/>
                                     <button type="button" className="btn btn-secondary" onClick={() => {this.props.onUpdate(currency)}}>Submit</button>
                                 </div>
         },
         {
             path: "your_coin",
             label: "$ your coin",
+            content: currency => <span> $ {this.formatYourCoin(currency)} </span>
         },
     ];
 
     handleInput = (currency, e) => {
+        console.log('sdcds');
         currency.amount = e.target.value;
     };
 
-    // formatInputPrice () {
-    //     return state.input.value === 0 ? 0 : this.state.value * this.state.currencies.quote.USD.price;
-    // }
+    formatAmount = (currency) => {
+        if(localStorage.getItem('currency_amount_' + currency.id)) {
+            return localStorage.getItem('currency_amount_' + currency.id);
+        }
+
+        return null;
+    };
+
+    formatYourCoin = (currency) => {
+        if(currency.your_coin === undefined && !this.formatAmount(currency)) {
+            return 0;
+        } else if(currency.your_coin) {
+            return  currency.your_coin;
+        }
+
+        return this.formatAmount(currency) * currency.quote.USD.price;
+    };
 
     render() {
         const { currencies, onUpdate } = this.props;
