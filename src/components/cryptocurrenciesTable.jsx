@@ -19,11 +19,11 @@ class CryptocurrenciesTable extends Component {
             },
             {
                 path: "quote." + config.convertCurrency + ".price",
-                label: "$ Value",
+                label: config.convertCurrencySymbol + " Value",
             },
             {
                 path: "quote." + config.convertCurrency + ".percent_change_24h",
-                label: "last 24h",
+                label: "Last 24h",
                 content: currency => <span
                     className={currency.quote[config.convertCurrency].percent_change_24h < 0 ? "text-danger" : "text-success"}>{currency.quote[config.convertCurrency].percent_change_24h} %</span>
             },
@@ -51,8 +51,8 @@ class CryptocurrenciesTable extends Component {
             },
             {
                 path: "your_coin",
-                label: "$ your coin",
-                content: currency => <span> $ {this.formatYourCoin(currency)} </span>
+                label: config.convertCurrencySymbol + " Your coin",
+                content: currency => <span> {config.convertCurrencySymbol} {this.formatYourCoin(currency)} </span>
             },
         ];
     }

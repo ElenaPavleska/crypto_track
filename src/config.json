@@ -3,6 +3,7 @@
   "apiUrl": "https://pro-api.coinmarketcap.com",
   "proxyUrl": "https://cors-anywhere.herokuapp.com/",
   "convertCurrency": "USD",
+  "convertCurrencySymbol": "$",
   "amountLocalStorageKeyPrefix": "currency_amount_",
   "coinValueLocalStorageKeyPrefix": "coin_value_"
 }
