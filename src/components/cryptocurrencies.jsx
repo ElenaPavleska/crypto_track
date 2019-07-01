@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { ToastContainer } from "react-toastify";
-import http from "../services/httpService";
-import "react-toastify/dist/ReactToastify.css";
+// import http from "../services/httpService";
 import CryptocurrenciesTable from "./cryptocurrenciesTable"
+import { getCurrencies } from "../services/cryptocurrenciesService";
 import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
 
@@ -16,33 +15,21 @@ class Cryptocurrencies extends Component {
     };
 
     async componentDidMount() {
-        var config = {
-            headers: {
-                "X-CMC_PRO_API_KEY": "0b90ded0-dca8-4265-8153-36c95423bc16",
-                "Accept": "application/json"
-            }
-        };
-        await http.get('https://cors-anywhere.herokuapp.com/' + 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=50&convert=USD', config)
-            .then(response => {
-                this.setState({currencies : response.data.data});
-            })
-    }
-
-    handleOpenDetails = (id, e) => {
-        e.preventDefault();
-        this.props.history.replace(`/cryptocurrencies/${id}`);
-    };
-
-    handleInputCurrency = (currency, e) => {
-        const input = e.target;
-        console.log(currency);
-        currency.testValue = 565;
-        //this.setState({ [state.inputCurrency]: input });
+        const { data } = await getCurrencies();
+        const currencies = [ ...data.data];
+        this.setState({ currencies });
     };
 
     handlePageChange = page => {
         this.setState({currentPage : page });
-    }
+    };
+
+    handleUpdate = async currency => {
+        const currencies = [...this.state.currencies];
+        const index = currencies.indexOf(currency);
+        currencies[index].your_coin = currencies[index].amount * currencies[index].quote.USD.price;
+        this.setState({ currencies });
+    };
 
     render() {
         const { length: count } = this.state.currencies;
@@ -52,12 +39,10 @@ class Cryptocurrencies extends Component {
 
         return (
             <React.Fragment>
-                <ToastContainer />
-                <p>Showing { count } Cryptocurrencies in the database.</p>
+                <h2 className="text-success">Cryptocurrencies</h2>
                 <CryptocurrenciesTable
                     currencies={ currencies }
-                    onOpenDetails={this.handleOpenDetails}
-                    onInputCurrency={this.handleInputCurrency}
+                    onUpdate={this.handleUpdate}
                 />
                 <Pagination
                     itemCount={count}

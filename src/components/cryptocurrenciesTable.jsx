@@ -1,42 +1,58 @@
 import React, {Component} from 'react';
-
+import Table from "./common/table";
+import { Link } from "react-router-dom";
 
 class CryptocurrenciesTable extends Component {
 
+    columns = [
+        {
+            path: "name",
+            label: "Name",
+            content: currency => <Link to={`/cryptocurrencies/${currency.id}`}>{currency.name}</Link>
+        },
+        {
+            path: "symbol",
+            label: "Short Name",
+        },
+        {
+            path: "quote.USD.price",
+            label: "$ Value",
+        },
+        {
+            path: "quote.USD.percent_change_24h",
+            label: "last 24h",
+            content: currency => <span className={currency.quote.USD.percent_change_24h < 0 ? "text-danger" : "text-success"}>{currency.quote.USD.percent_change_24h} %</span>
+        },
+        {
+            path: "amount",
+            label: "Amount you own",
+            content: currency => <div>
+                                    <input type="number" name="inputCurrency" className="form-control" onChange={(e) => this.handleInput(currency, e)}/>
+                                    <button type="button" className="btn btn-secondary" onClick={() => {this.props.onUpdate(currency)}}>Submit</button>
+                                </div>
+        },
+        {
+            path: "your_coin",
+            label: "$ your coin",
+        },
+    ];
+
+    handleInput = (currency, e) => {
+        currency.amount = e.target.value;
+    };
+
+    // formatInputPrice () {
+    //     return state.input.value === 0 ? 0 : this.state.value * this.state.currencies.quote.USD.price;
+    // }
 
     render() {
-        const { currencies, onOpenDetails, onInputCurrency } = this.props;
+        const { currencies, onUpdate } = this.props;
 
         return (
-            <table className="table">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Short Name</th>
-                    <th>$ Value</th>
-                    <th>last 24h</th>
-                    <th>Amount you own</th>
-                    <th>$ value of your coin</th>
-                </tr>
-                </thead>
-                <tbody>
-                {currencies.map(currency => (
-                    <tr key={currency.id}>
-                        <td onClick={(e) => onOpenDetails(currency.id, e)}>{currency.name}</td>
-                        <td>{currency.symbol}</td>
-                        <td>{currency.quote.USD.price}</td>
-                        <td>{currency.quote.USD.percent_change_24h}</td>
-                        <td>
-                            <form>
-                                <input type="number" name="inputCurrency" className="form-control" onChange={(e) => onInputCurrency(currency, e)} />
-                                <button type="button" className="btn btn-secondary">Submit</button>
-                            </form>
-                        </td>
-                        <td>{currency.testValue ? currency.testValue : 0.0 }</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            <Table
+                columns={this.columns}
+                data={currencies}
+            />
         );
     }
 }
