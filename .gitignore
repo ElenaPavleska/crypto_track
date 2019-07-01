@@ -22,6 +22,18 @@
 /src/style/.sass-cache
 /src/style/abstracts/.sass-cache
 /src/style/components/.sass-cache
+/src/style/abstracts/_mixins.css
+/src/style/abstracts/_mixins.css.map
+/src/style/abstracts/_variables.css
+/src/style/abstracts/_variables.css.map
+/src/style/components/_cryptocurrenciesTable.css
+/src/style/components/_cryptocurrenciesTable.css.map
+/src/style/style.css
+/src/style/style.css.map
+
+
+
+
 
 npm-debug.log*
 yarn-debug.log*
